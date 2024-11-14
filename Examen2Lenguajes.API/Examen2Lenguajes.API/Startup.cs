@@ -35,6 +35,7 @@ namespace Examen2Lenguajes.API
             
             // Add Custom Services
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IAccountsService, AccountsService>();
             
             // Add AutoMapper
             services.AddAutoMapper(typeof(AutoMapperProfile));

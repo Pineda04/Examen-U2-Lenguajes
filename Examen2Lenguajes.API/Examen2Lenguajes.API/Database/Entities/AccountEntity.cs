@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Examen2Lenguajes.API.Database.Entities
 {
@@ -27,12 +28,14 @@ namespace Examen2Lenguajes.API.Database.Entities
         [Column("parent_account_id")]
         public string? ParentAccountId { get; set; }
         [ForeignKey(nameof(ParentAccountId))]
+        [JsonIgnore]
         public virtual AccountEntity ParentAccount { get; set; }
 
         // Permitir movimiento
         [Column("allow_movement")]
         public bool AllowMovement { get; set; }
 
+        [JsonIgnore]
         public ICollection<AccountEntity> ChildAccounts { get; set; } = new List<AccountEntity>();
     }
 }

@@ -282,7 +282,7 @@ namespace Examen2Lenguajes.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Examen2Lenguajes.API.Database.Entities.AccountEntity", b =>
