@@ -5,11 +5,6 @@ namespace Examen2Lenguajes.API.Database.Entities
 {
     public class BaseEntity
     {
-        // Ids
-        [Key]
-        [Column("id")]
-        public Guid Id { get; set; }
-
         // Creado por
         [StringLength(100)]
         [Column("created_by")]

@@ -8,7 +8,7 @@ namespace Examen2Lenguajes.API.Database
     {
         private readonly IAuthService _authService;
 
-        public LogsContext(DbContextOptions options, IAuthService authService) : base(options)
+        public LogsContext(DbContextOptions<LogsContext> options, IAuthService authService) : base(options)
         {
             _authService = authService;
         }
@@ -40,5 +40,24 @@ namespace Examen2Lenguajes.API.Database
 
             return base.SaveChangesAsync(cancellationToken);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Configuración de LogEntity
+            modelBuilder.Entity<LogEntity>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.UserId).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Description).HasMaxLength(500);
+                entity.HasOne(e => e.JournalEntry)
+                      .WithMany()
+                      .HasForeignKey(e => e.JournalEntryId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+        }
+
+        public DbSet<LogEntity> Logs;
     }
 }
