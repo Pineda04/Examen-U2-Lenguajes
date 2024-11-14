@@ -34,5 +34,6 @@ namespace Examen2Lenguajes.API.Database.Entities
 
         // Relación con detalles de la partida
         public ICollection<JournalEntryDetailEntity> JournalEntryDetails { get; set; } = new List<JournalEntryDetailEntity>();
+        public ICollection<BalanceEntity> Balances { get; set; } = new List<BalanceEntity>();
     }
 }

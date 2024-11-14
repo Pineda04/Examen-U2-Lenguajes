@@ -13,5 +13,7 @@ namespace Examen2Lenguajes.API.Dtos.Balances
         public decimal Amount { get; set; }
 
         public string AccountNumber { get; set; }
+        
+        public Guid JournalEntryId { get; set; }
     }
 }

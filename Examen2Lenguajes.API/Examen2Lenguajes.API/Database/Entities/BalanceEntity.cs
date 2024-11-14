@@ -37,5 +37,12 @@ namespace Examen2Lenguajes.API.Database.Entities
         public string AccountNumber { get; set; }
         [ForeignKey(nameof(AccountNumber))]
         public AccountEntity Account { get; set; }
+
+        // Id de la partida
+        [Required]
+        [Column("journal_entry_id")]
+        public Guid JournalEntryId { get; set; }
+        [ForeignKey(nameof(JournalEntryId))]
+        public JournalEntryEntity JournalEntry { get; set; }
     }
 }

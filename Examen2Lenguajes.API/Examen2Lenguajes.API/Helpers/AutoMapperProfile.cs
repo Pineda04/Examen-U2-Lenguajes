@@ -35,6 +35,8 @@ namespace Examen2Lenguajes.API.Helpers
         private void MapsForBalances()
         {
             CreateMap<BalanceEntity, BalanceDto>();
+            CreateMap<BalanceCreateDto, BalanceEntity>();
+            CreateMap<BalanceEditDto, BalanceEntity>();
         }
 
         private void MapsForAccounts()
