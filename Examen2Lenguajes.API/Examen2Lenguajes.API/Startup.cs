@@ -48,6 +48,8 @@ namespace Examen2Lenguajes.API
             services.AddTransient<IAccountsService, AccountsService>();
             services.AddTransient<IBalancesService, BalancesService>();
             services.AddTransient<IAuditService, AuditService>();
+            services.AddTransient<IJournalEntriesService, JournalEntriesService>();
+            services.AddTransient<IJournalEntriesDetailsService, JournalEntriesDetailsService>();
 
             // Add Identity
             services.AddIdentity<IdentityUser, IdentityRole>(options => 

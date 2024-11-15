@@ -1,5 +1,6 @@
 using Examen2Lenguajes.API.Database.Entities;
 using Examen2Lenguajes.API.Dtos.Balances;
+using Examen2Lenguajes.API.Dtos.JournalEntriesDetails;
 
 namespace Examen2Lenguajes.API.Dtos.JournalEntries
 {
@@ -15,8 +16,8 @@ namespace Examen2Lenguajes.API.Dtos.JournalEntries
 
         public bool IsActive { get; set; }
 
-        public ICollection<JournalEntryDetailEntity> JournalEntryDetails { get; set; } = new List<JournalEntryDetailEntity>();
+        public ICollection<JournalEntryDetailDto> JournalEntryDetails { get; set; } = new List<JournalEntryDetailDto>();
 
-        public ICollection<BalanceDto> Balances { get; set; }
+        public ICollection<BalanceDto> Balances { get; set; } = new List<BalanceDto>();
     }
 }

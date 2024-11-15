@@ -46,7 +46,7 @@ namespace Examen2Lenguajes.API.Database.Entities
                         Email = "user@blogunah.edu",
                         UserName = "user@blogunah.edu",
                     };
-
+                    
                     await userManager.CreateAsync(normalUser, "Temporal01*");
 
                     await userManager.AddToRoleAsync(normalUser, RolesConstant.USER);
