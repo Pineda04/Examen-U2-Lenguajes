@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace Examen2Lenguajes.API.Database.Entities
 {
@@ -35,5 +36,8 @@ namespace Examen2Lenguajes.API.Database.Entities
         // Relación con detalles de la partida
         public ICollection<JournalEntryDetailEntity> JournalEntryDetails { get; set; } = new List<JournalEntryDetailEntity>();
         public ICollection<BalanceEntity> Balances { get; set; } = new List<BalanceEntity>();
+
+        public virtual IdentityUser CreatedByUser { get; set; }
+        public virtual IdentityUser UpdatedByUser { get; set; }
     }
 }

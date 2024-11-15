@@ -4,6 +4,7 @@ using Examen2Lenguajes.API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Examen2Lenguajes.API.Migrations
 {
     [DbContext(typeof(ContabilidadContext))]
-    partial class ContabilidadContextModelSnapshot : ModelSnapshot
+    [Migration("20241115053148_AddRelationsBetweenTables")]
+    partial class AddRelationsBetweenTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

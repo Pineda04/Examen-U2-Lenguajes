@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace Examen2Lenguajes.API.Database.Entities
 {
@@ -44,5 +45,8 @@ namespace Examen2Lenguajes.API.Database.Entities
         public Guid JournalEntryId { get; set; }
         [ForeignKey(nameof(JournalEntryId))]
         public JournalEntryEntity JournalEntry { get; set; }
+
+        public virtual IdentityUser CreatedByUser { get; set; }
+        public virtual IdentityUser UpdatedByUser { get; set; }
     }
 }

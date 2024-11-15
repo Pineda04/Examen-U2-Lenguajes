@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Examen2Lenguajes.API.Database.Entities
@@ -30,5 +31,8 @@ namespace Examen2Lenguajes.API.Database.Entities
         [Required]
         [Column("amount")]
         public decimal Amount { get; set; }
+
+        public virtual IdentityUser CreatedByUser { get; set; }
+        public virtual IdentityUser UpdatedByUser { get; set; }
     }
 }

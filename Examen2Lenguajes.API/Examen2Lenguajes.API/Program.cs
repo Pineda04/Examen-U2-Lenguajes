@@ -1,6 +1,7 @@
 using Examen2Lenguajes.API;
 using Examen2Lenguajes.API.Database;
 using Examen2Lenguajes.API.Database.Entities;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,11 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ContabilidadContext>();
-        await ContabilidadSeeder.LoadDataAsync(context, loggerFactory);
+        
+        var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        await ContabilidadSeeder.LoadDataAsync(context, loggerFactory, userManager, roleManager);
     }
     catch (Exception ex)
     {

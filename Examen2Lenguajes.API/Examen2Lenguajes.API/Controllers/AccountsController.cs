@@ -1,12 +1,15 @@
+using Examen2Lenguajes.API.Constants;
 using Examen2Lenguajes.API.Dtos.Accounts;
 using Examen2Lenguajes.API.Dtos.Common;
 using Examen2Lenguajes.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Examen2Lenguajes.API.Controllers
 {
     [ApiController]
     [Route("api/accounts")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class AccountsController : ControllerBase
     {
         private readonly IAccountsService _accountsService;
@@ -17,6 +20,7 @@ namespace Examen2Lenguajes.API.Controllers
 
         // Traer todos
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<ResponseDto<List<AccountDto>>>> GetAll()
         {
             var response = await _accountsService.GetAllAccountsAsync();
@@ -25,6 +29,7 @@ namespace Examen2Lenguajes.API.Controllers
 
         // Traer por id
         [HttpGet("{accountNumber}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ResponseDto<AccountDto>>> Get(string accountNumber)
         {
             var response = await _accountsService.GetAccountByNumberAsync(accountNumber);
@@ -33,6 +38,7 @@ namespace Examen2Lenguajes.API.Controllers
 
         // Crear
         [HttpPost]
+        [Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.USER}")]
         public async Task<ActionResult<ResponseDto<AccountDto>>> Create(AccountCreateDto dto)
         {
             var response = await _accountsService.CreateAsync(dto);
@@ -41,6 +47,7 @@ namespace Examen2Lenguajes.API.Controllers
 
         // Editar
         [HttpPut("{accountNumber}")]
+        [Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.USER}")]
         public async Task<ActionResult<ResponseDto<AccountDto>>> Edit(AccountEditDto dto, string accountNumber)
         {
             var response = await _accountsService.EditAsync(dto, accountNumber);
@@ -49,6 +56,7 @@ namespace Examen2Lenguajes.API.Controllers
         
         // Eliminar
         [HttpDelete("{accountNumber}")]
+        [Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.USER}")]
         public async Task<ActionResult<ResponseDto<AccountDto>>> Delete(string accountNumber)
         {
             var response = await _accountsService.DeleteAsync(accountNumber);

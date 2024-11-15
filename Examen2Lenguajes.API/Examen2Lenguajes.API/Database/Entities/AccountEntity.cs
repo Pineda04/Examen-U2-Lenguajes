@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Examen2Lenguajes.API.Database.Entities
 {
@@ -37,5 +38,8 @@ namespace Examen2Lenguajes.API.Database.Entities
 
         [JsonIgnore]
         public ICollection<AccountEntity> ChildAccounts { get; set; } = new List<AccountEntity>();
+
+        public virtual IdentityUser CreatedByUser { get; set; }
+        public virtual IdentityUser UpdatedByUser { get; set; }
     }
 }

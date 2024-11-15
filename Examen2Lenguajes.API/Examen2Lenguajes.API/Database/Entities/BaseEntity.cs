@@ -6,7 +6,7 @@ namespace Examen2Lenguajes.API.Database.Entities
     public class BaseEntity
     {
         // Creado por
-        [StringLength(100)]
+        [StringLength(450)]
         [Column("created_by")]
         public string CreatedBy { get; set; }
 
@@ -15,7 +15,7 @@ namespace Examen2Lenguajes.API.Database.Entities
         public DateTime CreatedDate { get; set; }
 
         // Actualizado por
-        [StringLength(100)]
+        [StringLength(450)]
         [Column("updated_by")]
         public string UpdatedBy { get; set; }
         
