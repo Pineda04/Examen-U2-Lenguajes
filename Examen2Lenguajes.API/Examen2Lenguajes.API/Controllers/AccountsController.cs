@@ -21,9 +21,12 @@ namespace Examen2Lenguajes.API.Controllers
         // Traer todos
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResponseDto<List<AccountDto>>>> GetAll()
+        public async Task<ActionResult<ResponseDto<List<AccountDto>>>> GetAll(
+            string searchTerm = "",
+            int page = 1        
+        )
         {
-            var response = await _accountsService.GetAllAccountsAsync();
+            var response = await _accountsService.GetAllAccountsAsync(searchTerm, page);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -38,7 +41,8 @@ namespace Examen2Lenguajes.API.Controllers
 
         // Crear
         [HttpPost]
-        [Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.USER}")]
+        [AllowAnonymous]
+        //[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.USER}")]
         public async Task<ActionResult<ResponseDto<AccountDto>>> Create(AccountCreateDto dto)
         {
             var response = await _accountsService.CreateAsync(dto);

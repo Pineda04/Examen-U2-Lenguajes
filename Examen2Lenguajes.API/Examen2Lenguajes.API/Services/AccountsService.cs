@@ -13,25 +13,59 @@ namespace Examen2Lenguajes.API.Services
     {
         private readonly ContabilidadContext _context;
         private readonly IMapper _mapper;
+        private readonly int PAGE_SIZE;
 
-        public AccountsService(ContabilidadContext context, IMapper mapper)
+        public AccountsService(ContabilidadContext context, IMapper mapper, IConfiguration configuration)
         {
             _context = context;
             _mapper = mapper;
+            PAGE_SIZE = configuration.GetValue<int>("PageSize");
         }
 
         // Obtener todas las cuentas
-        public async Task<ResponseDto<List<AccountDto>>> GetAllAccountsAsync()
+        public async Task<ResponseDto<PaginationDto<List<AccountDto>>>> GetAllAccountsAsync(
+            string searchTerm = "",
+            int page = 1)
         {
-            var accounts = await _context.Accounts.Include(a => a.ChildAccounts).ToListAsync();
-            var accountDtos = _mapper.Map<List<AccountDto>>(accounts);
+            int startIndex = (page - 1) * PAGE_SIZE;
 
-            return new ResponseDto<List<AccountDto>>
+            var accountsQuery = _context.Accounts
+                .Include(a => a.ChildAccounts)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
             {
-                Data = accountDtos,
+                accountsQuery = accountsQuery
+                    .Where(a => (a.Name + " " + a.AccountNumber)
+                    .ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            int totalAccounts = await accountsQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)totalAccounts / PAGE_SIZE);
+
+            var accountsEntity = await accountsQuery
+                .OrderBy(a => a.Name)
+                .Skip(startIndex)
+                .Take(PAGE_SIZE)
+                .ToListAsync();
+
+            var accountsDto = _mapper.Map<List<AccountDto>>(accountsEntity);
+
+            return new ResponseDto<PaginationDto<List<AccountDto>>>
+            {
+                StatusCode = 200,
                 Status = true,
                 Message = MessagesConstants.RECORDS_FOUND,
-                StatusCode = 200
+                Data = new PaginationDto<List<AccountDto>>
+                {
+                    CurrentPage = page,
+                    PageSize = PAGE_SIZE,
+                    TotalItems = totalAccounts,
+                    TotalPages = totalPages,
+                    Items = accountsDto,
+                    HasPreviousPage = page > 1,
+                    HasNextPage = page < totalPages
+                }
             };
         }
 
