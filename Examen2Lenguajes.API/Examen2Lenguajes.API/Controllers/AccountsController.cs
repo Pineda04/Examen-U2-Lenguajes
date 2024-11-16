@@ -41,8 +41,7 @@ namespace Examen2Lenguajes.API.Controllers
 
         // Crear
         [HttpPost]
-        [AllowAnonymous]
-        //[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.USER}")]
+        [Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.USER}")]
         public async Task<ActionResult<ResponseDto<AccountDto>>> Create(AccountCreateDto dto)
         {
             var response = await _accountsService.CreateAsync(dto);

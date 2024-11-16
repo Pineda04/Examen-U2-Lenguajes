@@ -10,7 +10,9 @@ namespace Examen2Lenguajes.API.Services.Interfaces
 {
     public interface IJournalEntriesService
     {
-        Task<ResponseDto<List<JournalEntryDto>>> GetAllAccountsAsync();
+        Task<ResponseDto<PaginationDto<List<JournalEntryDto>>>> GetAllJournalsAsync(
+            string searchTerm = "", int page = 1
+         );
 
         Task<ResponseDto<JournalEntryDto>> CreateAsync(JournalEntryCreateDto dto);
     }

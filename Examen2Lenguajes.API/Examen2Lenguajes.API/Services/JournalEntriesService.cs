@@ -12,6 +12,7 @@ using Examen2Lenguajes.API.Dtos.JournalEntries;
 using Examen2Lenguajes.API.Dtos.JournalEntriesDetails;
 using Examen2Lenguajes.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Examen2Lenguajes.API.Services
 {
@@ -21,60 +22,62 @@ namespace Examen2Lenguajes.API.Services
         private readonly IAuditService _auditService;
         private readonly ILogger<JournalEntriesService> _logger;
         private readonly IMapper _mapper;
+        private readonly int PAGE_SIZE;
 
         public JournalEntriesService(ContabilidadContext context,
                                       IAuditService auditService,
                                       ILogger<JournalEntriesService> logger,
-                                      IMapper mapper)
+                                      IMapper mapper,
+                                      IConfiguration configuration)
         {
             this._context = context;
             this._auditService = auditService;
             this._logger = logger;
             this._mapper = mapper;
+            PAGE_SIZE = configuration.GetValue<int>("PageSize");
         }
 
         // Obtener todas las partidas contables
-        public async Task<ResponseDto<List<JournalEntryDto>>> GetAllAccountsAsync()
+        public async Task<ResponseDto<PaginationDto<List<JournalEntryDto>>>> GetAllJournalsAsync(
+            string searchTerm = "", int page = 1
+            )
         {
-            var journalEntries = await _context.JournalEntries
-                        .Select(je => new JournalEntryDto
-                        {
-                            Id = je.Id,
-                            Date = je.Date,
-                            Description = je.Description,
-                            UserId = je.UserId,
-                            IsActive = je.IsActive,
-                            JournalEntryDetails = je.JournalEntryDetails
-                                    .Select(jed => new JournalEntryDetailDto
-                                    {
-                                        Id = jed.Id,
-                                        JournalEntryId = jed.JournalEntryId,
-                                        AccountNumber = jed.AccountNumber,
-                                        Amount = jed.Amount
-                                    }).ToList(),
-                            Balances = je.Balances
-                                    .Select(b => new BalanceDto
-                                    {
-                                        Id = b.Id,
-                                        Day = b.Day,
-                                        Month = b.Month,
-                                        Year = b.Year,
-                                        Amount = b.Amount,
-                                        AccountNumber = b.AccountNumber,
-                                        JournalEntryId = b.JournalEntryId
-                                    }).ToList()
-                        })
-                        .ToListAsync();
+            int startIndex = (page - 1) * PAGE_SIZE;
 
-            // Retornar la respuesta con los datos mapeados
-            return new ResponseDto<List<JournalEntryDto>>
+            var journalEntriesQuery = _context.JournalEntries
+                .Include(je => je.JournalEntryDetails)
+                .Include(je => je.Balances)
+                .AsQueryable();
+
+            int totalJournalEntries = await journalEntriesQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)totalJournalEntries / PAGE_SIZE);
+
+            var journalEntriesEntity = await journalEntriesQuery
+                .OrderBy(je => je.Date)
+                .Skip(startIndex)
+                .Take(PAGE_SIZE)
+                .ToListAsync();
+
+            var journalEntriesDto = _mapper.Map<List<JournalEntryDto>>(journalEntriesEntity);
+
+            return new ResponseDto<PaginationDto<List<JournalEntryDto>>>
             {
-                Data = journalEntries,
+                StatusCode = 200,
                 Status = true,
                 Message = MessagesConstants.RECORDS_FOUND,
-                StatusCode = 200
+                Data = new PaginationDto<List<JournalEntryDto>>
+                {
+                    CurrentPage = page,
+                    PageSize = PAGE_SIZE,
+                    TotalItems = totalJournalEntries,
+                    TotalPages = totalPages,
+                    Items = journalEntriesDto,
+                    HasPreviousPage = page > 1,
+                    HasNextPage = page < totalPages
+                }
             };
         }
+
 
         public async Task<ResponseDto<JournalEntryDto>> CreateAsync(JournalEntryCreateDto dto)
         {

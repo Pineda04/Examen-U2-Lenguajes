@@ -26,9 +26,12 @@ namespace Examen2Lenguajes.API.Controllers
         // Traer todos
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResponseDto<List<JournalEntryDto>>>> GetAll()
+        public async Task<ActionResult<ResponseDto<List<JournalEntryDto>>>> GetAll(
+            string searchTerm = "",
+            int page = 1
+            )
         {
-            var response = await _journalEntriesService.GetAllAccountsAsync();
+            var response = await _journalEntriesService.GetAllJournalsAsync(searchTerm, page);
             return StatusCode(response.StatusCode, response);
         }
 
